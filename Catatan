@@ -1,0 +1,24 @@
+Cara membuat file Controller
+php artisan make:controller nama file = untuk membuat file di controller
+php artisan make:controller nama file --resource = untuk membuat file di controller berserta isinya
+
+Cara membuat file model
+php artisan make:model nama file -m = untuk membuat file model bersama table
+
+Cara membuat file create table
+php artisan make:migrate create_namatabels_table = untuk membuat tabel di database dengan catatan setiap nama tabel harus diakhiri dengan huruf s
+
+Cara membuat file Mail
+php artisan make:mail namafolder/namafile --markdown=emails.namafolder.namafile= untuk membuat file di Mail
+
+Cara membuat file request
+php artisan make:request nama file = untuk membuat file di request
+
+Cara Install Brezee
+composer require laravel/breeze --dev
+
+php artisan breeze:install
+
+php artisan migrate
+npm install
+npm run dev

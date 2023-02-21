@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
+    // menampilkan halaman dashboard
     public function dashboard()
     {
         $checkouts = Checkout::with('Camps')->whereUserId(Auth::id())->get();

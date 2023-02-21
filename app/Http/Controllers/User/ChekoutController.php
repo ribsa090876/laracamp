@@ -8,6 +8,8 @@ use App\Models\Checkout;
 use Illuminate\Http\Request;
 use App\Http\Requests\User\Checkout\Store;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Checkout\AfterCheckout;
 
 class ChekoutController extends Controller
 {
@@ -44,9 +46,11 @@ class ChekoutController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    //  menambahan data ke database
     public function store(Store $request, Camps $camp)
     {
-        return $request->all();
+
         // mapping data
         $data = $request->all();
         $data['user_id'] = Auth::id();
@@ -61,6 +65,9 @@ class ChekoutController extends Controller
 
         // create checkout
         $checkout = Checkout::create($data);
+
+        // sending email
+        Mail::to(Auth::user()->email)->send(new AfterCheckout($checkout));
 
         return redirect(route('checkout.success'));
     }
@@ -111,5 +118,10 @@ class ChekoutController extends Controller
     }
     public function success(){
         return view('checkout.success');
+    }
+
+    public function invoice(Checkout $checkout)
+    {
+        return $checkout;
     }
 }
