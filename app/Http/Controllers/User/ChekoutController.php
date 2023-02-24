@@ -190,5 +190,52 @@ class ChekoutController extends Controller
         }
     }
 
+    public function midtransCallback(Request $request)
+    {
+        $notif = new Midtrans\Notification();
+
+
+        $transaction_status = $notif->transaction_status;
+        $fraud = $notif->fraud_status;
+
+        $checkout_id = explode('-', $notif->order_id)[0];
+        $checkout = Checkout::find($checkout_id);
+
+        if ($transaction_status == 'capture'){
+            if (!$fraud == 'challenge') {
+                // TODO Set payment status in merchant's database to 'challenge'
+                $checkout->payment_status = 'pending';
+            }
+            if ($fraud == 'accept') {
+                // TODO Set payment status in merchant's database to 'success'
+                $checkout->payment_status = 'paid';
+            }
+        } else if ($transaction_status == 'cancel') {
+            if (!$fraud == 'challenge') {
+                // TODO Set payment status in merchant's database to 'failure'
+                $checkout->payment_status = 'failed';
+            } else if ($fraud == 'accept'){
+                // TODO Set payment status in merchant's database to 'failure'
+                $checkout->payment_status = 'failed';
+            }
+        } elseif ($transaction_status == 'deny') {
+            // TODO Set payment status in merchant's database to 'failure'
+            $checkout->payment_status = 'failed';
+        } elseif ($transaction_status == 'settlement') {
+            // TODO Set payment status in merchant's database to 'settlement'
+            $checkout->payment_status = 'paid';
+        } elseif ($transaction_status == 'pending') {
+            // TODO Set payment status in merchant's database to 'pending'
+            $checkout->payment_status = 'pending';
+        } elseif ($transaction_status == 'expire') {
+            // TODO Set payment status in merchant's database to 'expire'
+            $checkout->payment_status = 'failed';
+        }
+
+        $checkout->save();
+        return view('checkout.success');
+
+    }
+
 
 }
